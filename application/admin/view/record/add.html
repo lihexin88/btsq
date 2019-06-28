@@ -1,0 +1,100 @@
+{include file="common/top" /}
+</head><body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> 
+  <!-- #section:basics/sidebar --> 
+  {include file="common/sidebar" /} 
+  <!-- /section:basics/sidebar -->
+  <div class="main-content">
+    <div class="main-content-inner"> 
+      <!-- #section:basics/content.breadcrumbs -->
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">挂卖管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+        <!-- /.breadcrumb --> 
+      </div>
+      <!-- /section:basics/content.breadcrumbs -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} </h1>
+        </div>
+          <!-- 添加用户 -->
+          <div class="row">
+            <div class="col-xs-12">
+              <form class="form-horizontal form-post" role="form">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 挂卖人ID </label>
+                  <div class="col-sm-9">
+                    <input name="seller_id" type="text" class="col-xs-10 col-sm-5" placeholder="请填写挂卖人ID" value="{$info.seller_id}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 挂卖数量 </label>
+                  <div class="col-sm-9">
+                    <input name="sell_number" type="text" class="col-xs-10 col-sm-5" placeholder="请填写挂卖数量" value="{$info.sell_number}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 挂卖单价 </label>
+                  <div class="col-sm-9">
+                    <input name="sell_amount" type="text" class="col-xs-10 col-sm-5" placeholder="请填写挂卖单价" value="{$info.sell_amount}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 联系人电话 </label>
+                  <div class="col-sm-9">
+                    <input name="tel" type="text" class="col-xs-10 col-sm-5" placeholder="请填写联系人电话" value="{$info.tel}" />
+                  </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="alert alert-danger" style="display:none;"></div>
+                <div class="clearfix form-actions">
+                  <div class="col-md-offset-3 col-md-9">
+                  <input name="id" class="hidden" type="text" value="{$info.id}">
+                    <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script type="text/javascript">
+$('a[href="/index.php/Admin/Sell/index.html"]').parents().filter('li').addClass('open active');
+//提交表单
+$(".form-post").find('button:submit').click(function() {
+  $.post("{:url('add')}", $(".form-post").serialize()).success(function(data) {
+    $('#btn').text('正在保存').attr('disabled', "true");
+    if (data.status === 0) {
+      $(".form-post .alert").text(data.info).show();
+      setTimeout(function() {
+        $('#btn').text('保存').removeAttr('disabled');
+        $(".form-post .alert").empty().hide();
+      },
+      1000);
+    }else{
+      setTimeout(function() {
+        location.href = data.url;
+      },
+      1000);
+    }
+  });
+  return false;
+});
+</script> 
+</body>
+</html>

@@ -1,0 +1,132 @@
+{include file="common/top" /}
+<style type="text/css">
+.main-container .table tr td {
+  vertical-align: middle;
+}
+.main-container .table tr td a{
+  margin-right:10px;
+}
+#sample-table-1 .menu-icon{
+  float: right;line-height: 18px;
+}
+</style>
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">用户矿池</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出{$info.count}条数据 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>时间</th>
+                      <th>账号</th>
+                      <th>矿池</th>
+					            <th>投资币的数量</th>
+                      <th>投资额（美金）</th>
+                      <th>开启等级</th>
+                      <th>出局倍数</th>
+                      <th>最大收益(美金)</th>
+                      <th>贡献值偏差%</th>
+                      <th>投资额偏差%</th>
+                      <th>结算出的挖矿收益（币）</th>
+                      <th>收益结算价（币单价美金）</th>
+                      <th>结算出的收益（美金）</th>
+                      <th>剩余收益（美金）</th>
+                      <th>币是否废弃</th>
+                      <th>废弃已回收的币</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="info.list" id="vo" key="k"}
+                      <tr>
+                        <td>{$vo.time}</td>
+                        <td>{$vo.email}</td>
+                        <td>{$k}</td>
+                        <td>{$vo.spend}</td>
+                        <td>{$vo.amount}</td>
+                        <td>{$vo.user_level}</td>
+						            <td>{$vo.all_reword/$vo.spend}</td>
+                        <td>{$vo.amount*$vo.all_reword/$vo.spend}</td>
+                        <td>{$vo.contribution_deviation}</td>
+                        <td>{$vo.investment_deviation}</td>
+                        <td>{$vo.settlement_income}</td>
+                        <td>{$vo.price}</td>
+                        <td>{$vo.price*$vo.settlement_income}</td>
+                        <td>{$vo.shengyu}</td>
+                        <td>{$vo.mining_status}</td>
+                        <td>{$vo.unextracted}</td>
+                      </tr>
+                    {/volist}
+                  </tbody>
+                </table>
+                <div style="width:100%;margin: 0 auto; text-align:center;">
+                  <ul class="pagination" >
+                    {$info.page}
+                  </ul>
+                </div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+  {if condition="input('get.email')"}
+    $('input[name="email"]').val('{$_GET["email"]}');
+  {/if}
+          {if condition="input('get.start_time')"}
+    $('input[name="start_time"]').val('{$_GET["start_time"]}');
+  {/if}
+      {if condition="input('get.end_time')"}
+    $('input[name="end_time"]').val('{$_GET["end_time"]}');
+  {/if}
+</script>
+<script type="text/javascript">
+$('a[href="/index.php/Admin/user_mills/mining_profit.html"]').parents().filter('li').addClass('open active');
+jQuery(function($) {
+  //清除查询条件
+  $(document).on('click', 'button:reset',function() {
+    location.href = '{:url(\'mining_profit2\')}';
+  }); 
+});
+</script>
+</body>
+</html>

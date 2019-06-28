@@ -1,0 +1,128 @@
+{include file="common/top" /}
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container">
+    {include file="common/sidebar" /}
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a>
+                    </li>
+                    <li class="active">后台首页</li>
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <h1> 后台首页
+                        <small><i class="ace-icon fa fa-angle-double-right"></i> 在这里显示汇总信息</small>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="alert alert-block alert-success">
+                            <button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button>
+                            <i class="ace-icon fa fa-check green"></i> 欢迎使用{:config('WEB_SITE_NAME')}网站管理系统！
+                            (特别提示：请使用谷歌内核浏览器访问本网站！如chrome，360极速，搜狗浏览器高速模式等)
+                        </div>
+                        <button onclick="daily_plan()" class="btn btn-success">激活日计划</button>
+                            <!--<button onclick="display_controller()" class="btn btn-success disabled" title="暂时关闭">设定主题</button>-->
+                        <div id = "color_controller" style="display: none">
+                            <div id = "color_selector" >
+                                R:<input type="range" onchange="change_display()" id = "red"  min="0" max="15" value = "">
+                                G:<input type="range" onchange="change_display()" id = "green"  min="0" max="15" value = "">
+                                B:<input type="range" onchange="change_display()" id = "blue"  min="0" max="15" value = "">
+                            </div>
+                            <div id = "color_display" style="background-color: #0C0C0C;width: 50px;height: 50px">
+                            </div>
+                        </div>
+                        <!-- PAGE CONTENT ENDS -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+    </div>
+    <!-- /.main-content -->
+    <div class="footer">
+        <div class="footer-inner">
+            <!-- #section:basics/footer -->
+            <div class="footer-content"><span class="bigger-120"> <span
+                    class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+            <!-- /section:basics/footer -->
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i
+            class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a></div>
+<!-- /.main-container -->
+<!-- basic scripts -->
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script>
+    function daily_plan() {
+        layer.confirm("确认手动生成报表？",{btn:['确认','取消'],type: 0},function (index) {
+            layer.msg("统计中",{time:"20000"});
+            $.ajax({
+                url:"{:url('index/daily_plan')}",
+                data:null,
+                method: "post",
+                success:function (result) {
+                    if(result){
+                        layer.alert("报表已完成！");
+                    }else{
+                        layer.alert("生成报表失败！");
+                    }
+                },error:function (result) {
+                    layer.alert("失败")
+                }
+            })
+        })
+    }
+    function display_controller() {
+        layer.open({
+            type: 1,
+            area:['420px','240px'],
+            btn:['确认'],
+            shade: false,
+            title: false, //不显示标题
+            content: $('#color_controller'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+            cancel: function(){
+                layer.msg("已取消,请刷新页面");
+            },
+            yes:function () {
+                var r = parseInt($("#red").val()).toString(16);
+                var g = parseInt($("#green").val()).toString(16);
+                var b= parseInt($("#blue").val()).toString(16);
+                $.ajax({
+                    url:"/index.php/Admin/Index/change_theme",
+                    data:{
+                        "r":r,
+                        "g":g,
+                        "b":b
+                    },
+                    method:"post",
+                    success:function (result) {
+                        layer.msg("主题已改变");
+                        location.href = "/index.php/Admin/Index/index.html"
+                    }
+                })
+            }
+        });
+    }
+    function change_display() {
+        var r = parseInt($("#red").val()).toString(16);
+        var g = parseInt($("#green").val()).toString(16);
+        var b= parseInt($("#blue").val()).toString(16);
+        $("#color_display").css("background-color","#"+r+g+b);
+    }
+</script>
+</body>
+</html>
+<script type="text/javascript">
+    $('a[href="/index.php/Admin/Index.html"]').parents().filter('li').addClass('active open');
+</script>
+

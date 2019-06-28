@@ -1,0 +1,158 @@
+{include file="common/top" /}
+<style type="text/css">
+.search {text-indent:0.5em;}
+.main-container .table tr td {
+	vertical-align: middle;
+}
+.main-container .table tr td a{
+	margin-right:10px;
+}
+.state_red {float:right;width:50px;height:26px;line-height:26px;text-align:center;color:white;border-radius:10px;background-color:red;cursor:pointer;box-shadow:#006666 1px 1px 2px;}
+.state_green {float:left;width:50px;height:26px;line-height:26px;text-align:center;color:white;border-radius:10px;background-color:green;cursor:pointer;box-shadow:#18A665 1px 1px 2px;}
+</style>
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">管理员</a> </li>
+          <li class="active">{$pagename}</li>
+          </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 一共{$list.count}个用户 </small> </h1>
+        </div>
+        <div class="row">
+          <div class="col-xs-12" style="margin-bottom:10px;">
+              <a class="btn btn-sm btn-success" style="float:right; margin-right:10px;" href="{:url('add_user')}" >新增用户</a>
+          </div>
+          <div class="col-xs-12">
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="center">用户ID</th>
+                  <th>管理员</th>
+                  <th>管理员类型</th>
+                  <!--<th>管理状态</th>-->
+                  <th>更新时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {volist name="list.list" id="vo" key="k"}
+                  <tr>
+                    <td class="center"> {$vo.id}</td> 
+                    <td> {$vo.username} </td>
+                    <td> {$vo.userTypeTxt} </td>
+                    <!--<td><div class='{$vo.status_button}' onclick='change_status({$vo.id},{$vo.status})'> {$vo.statusTxt} </div></td>-->
+                    <td> {$vo.update_time} </td>
+                    <td>
+                    	<a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="edit_pwd(this,{$vo.id})">重置密码</a>
+                    	{if condition='$vo.id != 1'}
+                    	<a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="deleteInfo(this,{$vo.id})">删除</a>
+                    	{/if}
+                    </td>
+                  </tr>
+                {/volist}
+              </tbody>
+            </table>
+            <div style="width:100%;margin: 0 auto; text-align:center;">
+              <ul class="pagination" >
+                {$list.page}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+	$('a[href="/index.php/Admin/Admin/index.html"]').parents().filter('li').addClass('open active');
+</script>
+<script type="text/javascript">
+jQuery(function($) {
+	//清除查询条件
+	$(document).on('click', 'button:reset',function() {
+		location.href = '{:url(\'index\')}';
+	});	
+	if('{$Think.get.keywords}'){
+		$('input[name="keywords"]').val('{$Think.get.keywords}');
+	}
+	if('{$Think.get.group_id}'){
+		$('select[name="group_id"]').val('{$Think.get.group_id}');
+	}
+});
+
+// 切换管理员状态
+function change_status(id,status){
+	layer.confirm('确定要修改吗?',{
+		btn:['确定','关闭']
+	},function(){
+		$.post('{:url("change_status")}',{id:id,status:status}).success(function(data){
+			if(data.code == 0){
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}else{
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}
+		});
+	});
+}
+
+// 重置管理员密码
+function edit_pwd(obj,id){
+	layer.confirm('确定要重置密码吗？<br>该用户的登陆密码重置为123456！',{
+		btn:['确定','关闭']
+	},function(){
+		$.post('{:url("edit_pwd")}',{id:id}).success(function(data){
+			if(data.code == 1){
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}else{
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}
+		});
+	});
+}
+
+// 删除管理员
+function deleteInfo(obj,id){
+	layer.confirm('确定要删除吗？<br>该管理员所有的信息都将被完全删除，不可恢复！',{
+		btn:['确定','关闭']
+	},function(){
+		$.post('{:url("delete_admin")}',{id:id}).success(function(data){
+			if(data.code == 1){
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}else{
+				layer.msg(data.msg,{icon:data.code,time:1000},function(){
+					location.href = self.location.href;
+				});
+			}
+		});
+	});
+}
+</script>
+</body>
+</html>

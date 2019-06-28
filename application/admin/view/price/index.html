@@ -1,0 +1,122 @@
+{include file="common/top" /}
+<style type="text/css">
+.main-container .table tr td {
+  vertical-align: middle;
+}
+.main-container .table tr td a{
+  margin-right:10px;
+}
+</style>
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">用户管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出{$info.count}条数据 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th class="center">排序</th>
+                      <th>虚拟币价格</th>
+                      <th>时间</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="info.list" id="vo" key="k"}
+                      <tr>
+                        <td class="center">{$vo.id}</td>
+                        <td>{$vo.price}</td>
+                        <td>{$vo.time}</td>
+                      </tr>
+                    {/volist}
+                  </tbody>
+                </table>
+                <div style="width:100%;margin: 0 auto; text-align:center;">
+                  <ul class="pagination" >
+                    {$info.page}
+                  </ul>
+                </div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+$('a[href="/index.php/Admin/Price/index.html"]').parents().filter('li').addClass('open active');
+jQuery(function($) {
+  //清除查询条件
+  $(document).on('click', 'button:reset',function() {
+    location.href = '{:url(\'index\')}';
+  }); 
+  //更改状态
+  $('.state').change(function() {
+    var state = $(this).val();
+    var id = $(this).attr('data-id');
+    $.post("{:url('edit')}", {id: id,status: state}).success(function(data) {
+      layer.msg(data.info, {icon: data.status,time: 1500},function(){
+        location.href=self.location.href;
+      });
+    })
+  });
+});
+
+  //删除用户
+  function deleteInfo(obj,id){
+    layer.confirm('确定要删除吗？<br>本用户所有的信息都将被完全删除，不可恢复！', {
+        btn: ['确定','关闭'] //按钮
+      }, function(){
+         $.post("{:url('delete')}", {id: id}).success(function(data) {
+          if (data.code == 0) {
+            layer.msg(data.msg, {icon: data.code,time: 1500},function(){
+              location.href=self.location.href;
+            });
+          }else{
+            layer.msg(data.info, {icon: data.status,time: 1500},function(){
+              location.href=self.location.href;
+            });
+          }
+        })
+      }
+    );
+  }
+</script>
+</body>
+</html>

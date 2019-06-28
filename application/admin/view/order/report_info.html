@@ -1,0 +1,113 @@
+{include file="common/top" /}
+</head><body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> 
+  <!-- #section:basics/sidebar --> 
+  {include file="common/sidebar" /} 
+  <!-- /section:basics/sidebar -->
+  <div class="main-content">
+    <div class="main-content-inner"> 
+      <!-- #section:basics/content.breadcrumbs -->
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">订单管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+        <!-- /.breadcrumb --> 
+      </div>
+      <!-- /section:basics/content.breadcrumbs -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} </h1>
+        </div>
+          <!-- 添加用户 -->
+          <div class="row">
+            <div class="col-xs-12">
+              <form class="form-horizontal form-post" role="form">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right">买家：</label>
+                  <div class="col-sm-9">
+                    <div style="padding: 7px 4px 7px;font-size: 14px;line-height: 21px;">{$info.buyer_name}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right">卖家：</label>
+                  <div class="col-sm-9">
+                    <div style="padding: 7px 4px 7px;font-size: 14px;line-height: 21px;">{$info.seller_name}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 举报原因：</label>
+                  <div class="col-sm-9">
+                    <textarea class="col-xs-10 col-sm-5" style="height: 150px;" readonly="">{$info.report_content}</textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 举报凭证：</label>
+                  <div class="col-sm-9 imgview">
+                    <img src="{$info.voucher}" class="col-xs-10 col-sm-5" style="padding: 0" />
+                  </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="alert alert-danger" style="display:none;"></div>
+                <div class="clearfix form-actions">
+                  <div class="col-md-offset-3 col-md-9">
+                  <input name="id" class="hidden" type="text" value="{$info.id}">
+                  <input name="order_status" class="hidden" type="text" value="3">
+                    <a  href="javascript:void(0);" class="btn btn-info" onclick="reportActive(1)"> <i class="ace-icon fa fa-check bigger-110"></i> 订单正常 </a>
+                    <a  href="javascript:void(0);"class="btn btn-danger" onclick="reportActive(2)"> <i class="ace-icon fa fa-remove bigger-110"></i> 买家违规 </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+$('a[href="/index.php/Admin/Order/index.html"]').parents().filter('li').addClass('open active');
+//提交表单
+$(".form-post").find('button:submit').click(function() {
+  $.post("{:url('cancelactive')}", $(".form-post").serialize()).success(function(data) {
+    $('#btn').text('正在保存').attr('disabled', "true");
+    if (data.status === 0) {
+      $(".form-post .alert").text(data.info).show();
+      setTimeout(function() {
+        $('#btn').text('保存').removeAttr('disabled');
+        $(".form-post .alert").empty().hide();
+      },
+      1000);
+    }else{
+      setTimeout(function() {
+        location.href = data.url;
+      },
+      1000);
+    }
+  });
+  return false;
+});
+ $(".imgview").click(function (e) {
+    layer.photos({photos: {"data": [{"src": e.target.src}]}});
+});
+function reportActive(report_status) {
+  $.post("{:url('report_info')}",{'id':"{:input('id')}",'report_status':report_status}).success(function(data) {
+      layer.msg(data.msg, {icon: data.code,time: 1500},function(){
+        location.href="{:url('index')}";
+      });
+  });
+}
+</script> 
+</body>
+</html>

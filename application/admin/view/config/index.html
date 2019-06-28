@@ -1,0 +1,229 @@
+{include file="common/top" /}
+</head>
+
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container">
+    <!-- #section:basics/sidebar -->
+    {include file="common/sidebar" /}
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- #section:basics/content.breadcrumbs -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+                    <li> <a href="{:url('index')}">系统设置</a> </li>
+                    <li class="active">{$pagename}</li>
+                </ul>
+                <!-- /.breadcrumb -->
+            </div>
+            <!-- /section:basics/content.breadcrumbs -->
+            <div class="page-content">
+                <div class="page-header" id='url_type' data-url="{$list.url_type}">
+                    <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 设置站点信息 </small> </h1>
+                </div>
+                <!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form class="form-horizontal form-post" role="form">
+                            <!-- #section:elements.form -->
+                            {volist name="list.list" id="vo" key = "k"}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right"> {$vo.info} </label>
+                                <div class="col-sm-9">
+                                    {switch name="vo.type"}
+                                    {case value="0"}
+                                    <input name="{$vo.key}" type="text" class="col-xs-10 col-sm-5" placeholder="此处填写{$vo.info}" value="{$vo.value}" {$vo.state == 1? '' : 'disabled'} />
+                                    {/case}
+                                    {case value="1"}
+                                    <textarea name="{$vo.key}" class="col-xs-10 col-sm-5" placeholder="这里填写{$vo.info}" >{$vo.value}</textarea>
+                                    {/case}
+                                    {case value="2"}
+                                    <div class="col-sm-9">
+                                        <div class="radio" style="float:left">
+                                            <label> <input name="{$vo.key}" type="radio" class="ace" value="1" {$vo['value'] == 1?'checked' : ''}> <span class="lbl"> 开启</span> </label>
+                                        </div>
+                                        <div class="radio" style="float:left">
+                                            <label> <input name="{$vo.key}" type="radio" class="ace" value="0" {$vo['value'] == 0?'checked' : ''} > <span class="lbl"> 关闭</span> </label>
+                                        </div>
+                                    </div>
+                                    {/case}
+                                    {case value="3"}
+                                    <div class="form-group">
+                                        <div class="col-sm-3 col-lg-3" style="padding-right: 0px;">
+                                            <input name="{$vo.key}" type="text" class="form-control" placeholder="此处是{$vo.info}路径" value="{$vo.value}" disabled>
+                                        </div>
+                                        <div class="col-sm-2 col-lg-2" style="padding-left: 0px;">
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-success" id="test1" data-type="headimg">点击上传{$vo.info}</a>
+                                        </div>
+                                    </div>
+                                    {/case}
+                                    {case value="4"}
+                                    <div class="form-group">
+                                        <br>
+                                        <div class="col-sm-10 col-lg-5" style="padding-right: 0px;">
+                                            <script id="container{$k}" name="{$vo.key}" text="text/plain">{$vo.value?$vo.value:""}</script>
+                                        </div>
+                                    </div>
+                                    {/case}
+                                    {/switch}
+                                </div>
+                            </div>
+                            {/volist}
+                            {if condition="$list['url_type'] eq 'mining' OR $list['url_type'] eq 'index'"}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right"> 手机号 </label>
+                                    <div class="col-sm-9">
+                                        <input name="phone" type="text" class="col-xs-10 col-sm-5" placeholder="管理员手机号码" style="margin-right:10px;width:200px;"/>
+                                        <a class="btn btn-sm btn-primary" id='get_verification'>发送验证码</a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right"> 手机号 </label>
+                                    <div class="col-sm-9">
+                                        <input id='code' name="code" type="text" class="col-xs-10 col-sm-5" placeholder="手机验证码" style="width:200px;"/>
+                                    </div>
+                                </div>
+                            {/if}
+                            <div class="space-4"></div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type='hidden' name="url_type" value="{$list.url_type}" />
+                                    <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.page-content -->
+        </div>
+    </div>
+    <!-- /.main-content -->
+    <div class="footer">
+        <div class="footer-inner">
+            <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a>
+</div>
+<!-- /.main-container -->
+<!-- basic scripts -->
+{include file="common/bottom" /}
+<link rel="stylesheet" href="__LAYUI__/css/layui.css" media="all">
+
+<script src="__LAYUI__/layui.js"></script>
+<script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="__EDITOR__/ueditor.config.js"></script>
+<script type="text/javascript" src="__EDITOR__/ueditor.all.js"></script>
+<script type="text/javascript" src="__EDITOR__/ueditor.parse.js"></script>
+<script type="text/javascript">
+  // 定位
+  var url_type = $('#url_type').data('url');
+  switch(url_type){
+	case ('file'):
+      	$('a[href="/index.php/Admin/Config/config_file.html"]').parents().filter('li').addClass('open active');
+		break;
+    case ('cost'):
+      	$('a[href="/index.php/Admin/Config/config_cost.html"]').parents().filter('li').addClass('open active');
+        break;
+    case ('mining'):
+      	$('a[href="/index.php/Admin/Config/config_mining.html"]').parents().filter('li').addClass('open active');
+      	break;
+    case ('index'):
+      	$('a[href="/index.php/Admin/Config/index.html"]').parents().filter('li').addClass('open active');
+      	break;
+  }
+</script>
+<script type="text/javascript">
+    $(document).ready(function (){
+        {volist name = 'list.list' id = 'vo' key = 'k'}
+        {if condition = "($vo.type eq 4)"}
+            var ue{$k} = UE.getEditor('container{$k}');
+        {/if}
+        {/volist}
+    });
+</script>
+<script>
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,accept:"file"
+            ,url: "{:url('Currency/upload')}" //上传接口
+            ,data: {type: 'surface'}
+            ,done: function(res){
+                // console.log(res)
+                //上传完毕回调
+                if(res.status == 0){
+                    layer.msg(res.info, {icon: res.status,time: 1500});
+                }else{
+                    //返回路径
+                    $("input[name={$vo.key}]").val(res.msg);
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    // 获取短信验证码;
+    var validCode = true;
+    $("#get_verification").click(function() {
+        var phone = $("input[name='phone']").val();
+        $(this).attr('disabled', true);
+        var time = 30;
+        var get_code = $(this);
+        if(validCode) {
+            $.ajax({
+                type:'post',
+                url:'{:url("get_verify")}',
+                data:{phone:phone},
+                success:function(ret){
+                    if(ret.code === 0){
+                        layer.msg(ret.msg);
+                        get_code.attr('disabled', false);
+                    }else{
+                        validCode = false;
+                        var t = setInterval(function() {
+                            time--;
+                            get_code.html(time + "秒");
+                            if(time == 0) {
+                                clearInterval(t);
+                                get_code.html("重新获取");
+                                validCode = true;
+                                get_code.attr('disabled', false);
+                            }
+                        }, 1000);
+                        $('#code').val(ret.data);
+                        layer.msg(ret.msg);
+                    }
+                }
+            });
+        }
+    });
+
+    // 保存
+    $(".form-post").find('button:submit').click(function() {
+        $.post("{:url('index')}", $(".form-post").serialize()).success(function(data) {
+            $('#btn').text('正在保存').attr('disabled',"true");
+            if (data.status === 0){
+                layer.msg(data.info);
+                $('#btn').text('保存').removeAttr('disabled');
+            }else{
+                layer.msg("已保存",{icon:data.status,time:1500});
+                $('#btn').text('保存').removeAttr('disabled');
+                setTimeout(function() {
+                    location.href = self.location.href;
+                },1500);
+            }
+        });
+        return false;
+    });
+</script>
+</body>
+</html>

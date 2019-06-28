@@ -1,0 +1,134 @@
+{include file="common/top" /}
+</head><body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> 
+  <!-- #section:basics/sidebar --> 
+  {include file="common/sidebar" /} 
+  <!-- /section:basics/sidebar -->
+  <div class="main-content">
+    <div class="main-content-inner"> 
+      <!-- #section:basics/content.breadcrumbs -->
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('rule')}">权限管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+        <!-- /.breadcrumb --> 
+      </div>
+      <!-- /section:basics/content.breadcrumbs -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <a class="btn btn-sm btn-success" style="float:right; margin-right:10px;" href="{:url('rule')}"><img src='__IMG__/back.png'/>&nbsp;返&nbsp;回&nbsp;</a></h1>
+        </div>
+          <!-- 添加节点 -->
+          <div class="row">
+            <div class="col-xs-12">
+              <form class="form-horizontal form-post" role="form">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 权限名称 </label>
+                  <div class="col-sm-9">
+                    <input name="title" type="text" class="col-xs-10 col-sm-5" placeholder="此处填写权限名称" value="{$info.title}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 对应URL </label>
+                  <div class="col-sm-9">
+                    <input name="name" type="text" class="col-xs-10 col-sm-5" placeholder="Admin/Index/index" value="{$info.name}" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 所属模块 </label>
+                  <div class="col-sm-9">
+                    <select name="pid" class="col-xs-10 col-sm-5">
+                      <option value="0">顶级分类</option>
+                      {volist name="pidlist" id="vo"}
+                        <option value="{$vo.id}">{$vo.title} - {$vo.name}</option>
+                      {/volist}
+                    </select>
+                  </div>
+                </div> 
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 规则附件条件 </label>
+                  <div class="col-sm-9">
+                    <input name="condition" type="text" class="col-xs-10 col-sm-5" placeholder="例如 {score}>5  and {score}<100" value="{$info.condition}" />
+                    <span class="help-inline col-xs-12 col-sm-7">
+                      <span class="middle">非顶级模块时规则生效</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 菜单图标 </label>
+                  <div class="col-sm-9">
+                    <input name="icon" type="text" class="col-xs-10 col-sm-5" placeholder="menu-icon fa fa-图标" value="{$info.icon}" />
+                    <span class="help-inline col-xs-12 col-sm-7">
+                      <span class="middle">仅在权限为顶级模块时启用</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right">显示状态</label>
+                  <div class="col-sm-9">
+                    {volist name="is_show" id="vo"}
+                    <div class="radio" style="float:left">
+                      <label><input name="is_show" type="radio" class="ace" value="{$vo.value}"><span class="lbl"> {$vo.key} </span> </label>
+                    </div>
+                    {/volist}
+                    <span class="help-inline col-xs-12 col-sm-7">
+                      <span class="middle">控制权限是否在右侧菜单显示</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="alert alert-danger" style="display:none;"></div>
+                <div class="clearfix form-actions">
+                  <div class="col-md-offset-3 col-md-9">
+                  <input name="id" class="hidden" type="text" value="{$info.id}">
+                    <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        <!--表单结束--> 
+      </div>
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+	$('a[href="/index.php/Admin/add.html"]').parents().filter('li').addClass('open active');
+</script>
+<script type="text/javascript">
+//参数赋值
+$('select[name=pid]').val('{$info.pid}');
+$('input[name=is_show][value={$info.is_show}]').attr("checked", 'checked');
+//提交表单
+$(".form-post").find('button:submit').click(function() {
+  $.post("{:url('add')}", $(".form-post").serialize()).success(function(data) {
+    $('#btn').text('正在保存').attr('disabled',"true");
+    if (data.status === 0){
+    	layer.msg(data.info,{icon:data.status,time:1000},function(){
+      	location.href = self.location.href;
+      });
+      $(".form-post .alert").text(data.info).show();
+    }
+    layer.msg(data.info,{icon:data.status,time:1000},function(){
+    	location.href = self.location.href;
+    })
+    setTimeout(function() {location.href=self.location.href;},1000);
+  });
+  return false;
+});
+</script> 
+</body>
+</html>

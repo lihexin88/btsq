@@ -1,0 +1,202 @@
+{include file="common/top" /}
+<style type="text/css">
+.main-container .table tr td {
+  vertical-align: middle;
+}
+.main-container .table tr td a{
+  margin-right:10px;
+}
+</style>
+</head>
+<body class="no-skin" style="font-size: 13px;">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">用户管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1 style="text-align: left;"> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出{$info.count}条数据 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12" style="margin-bottom:10px;">
+                <form action="{:url('index')}" method="get" class="form-inline" role="form">
+                  <div class="form-group">
+                    <label>用户</label>
+                    <input name="keywords" type="text" class="form-control" placeholder="请输入邮箱">
+                  </div>
+                  <div class="form-group"><label>状态</label>
+                    <select name="f_type" class="form-control">
+                    <option value="">全部</option>
+                      {volist name="f_type" id="vo"}
+                        <option value="{$key}">{$vo}</option>
+                      {/volist}
+                    </select>
+                  </div>
+				                    <div class="form-group"><label>回复状态</label>
+                    <select name="status" class="form-control">
+                    <option value="">全部</option>
+                    <option value="0">未回复</option>
+                    <option value="1">已回复</option>
+                    </select>
+                  </div>
+				                    <div class="form-group">
+                    <label>时间</label>
+                    <input type="date" name="start" class="form-control">~
+					          <input type="date" name="end" class="form-control">
+                  </div>
+                  <button type="submit" class="btn btn-sm btn-primary">查询</button>
+                  <!-- <a class="btn btn-sm btn-success" style="float:right; margin-right:10px;" href="{:url('add')}" >添加用户</a> -->
+                  <button type="reset" class="btn btn-sm btn-danger hidden-xs" style="float:right;margin-right:10px;">清空查询条件</button>
+                </form>
+              </div>
+              <div class="col-xs-12">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th class="center" style="width: 3%">排序</th>
+                      <th class="center">用户</th>
+                      <th style="width: 6%">问题类型</th>
+                      <th>内容</th>
+                      <th>时间</th>
+                      <th style="width: 5%">状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="info.list" id="vo" key="k"}
+                      <tr style="cursor: pointer" title="点击查看详情" onclick="show_feedback({$vo.id})">
+                        <td class="center">{$k}</td>
+                        <td class="center">{$vo.email}</td>
+                        <td>{$vo.chs_name}</td>
+                        <td>{$vo.content}</td>
+                        <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.feedback_status}</td>                          
+                        <td>
+                          <a class="btn btn-success btn-sm" href="javascript:void(0);" onclick="show_feedback({$vo.id})">问题详情</a>
+                        </td>
+                      </tr>
+                    {/volist}
+                  </tbody>
+                </table>
+                <div style="width:100%;margin: 0 auto; text-align:center;">
+                  <ul class="pagination" >
+                    {$info.page}
+                  </ul>
+                </div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+  // 定位
+  $('a[href="/index.php/Admin/Feedback/index.html"]').parents().filter('li').addClass('open active');
+</script>
+<script type="text/javascript">
+  {if condition="input('get.keywords')"}
+    $('input[name="keywords"]').val('{$_GET["keywords"]}');
+  {/if}
+  {if condition="is_numeric(input('get.f_type'))"}
+    $('select[name="f_type"]').val({$_GET['f_type']});
+  {/if}
+      {if condition="is_numeric(input('get.status'))"}
+    $('select[name="status"]').val({$_GET['status']});
+  {/if}
+        {if condition="input('get.start')"}
+    $('input[name="start"]').val('{$_GET["start"]}');
+  {/if}
+      {if condition="input('get.end')"}
+    $('input[name="end"]').val('{$_GET["end"]}');
+  {/if}
+
+</script>
+<script type="text/javascript">
+$('a[href="/Admin/Feedback.html"]').parents().filter('li').addClass('open active');
+jQuery(function($) {
+  //清除查询条件
+
+  $(document).on('click', 'button:reset',function() {
+
+    location.href = '{:url(\'index\')}';
+
+  }); 
+
+
+});
+function show_feedback(id) {
+    $.post("{:url('user_feedback')}",{id:id}).success(function(data) {
+      var html = '<table class="table table-striped table-bordered table-hover"><tbody>';
+        html += '<tr><td>问题</td><td>'+data['content']+'</td></tr>';
+        html += '<tr><td>问题分类</td><td>'+data['f_type']+'</td></tr>';
+      html += '<tr><td>图片</td><td class="view-img"><img src="'+data['img']+'" onclick="view_img()" width="250px"></td></tr>';
+      html += '<tr><td>回复</td><td><input type="text" value="'+data['reply']+'" id="reply"></td></tr>';
+      html += '<tr><td></td><td><a class="btn btn-success btn-sm" href="javascript:void(0);" onclick="add_feedback('+id+')">回复</a></td></tr>';
+      
+      html += '</tbody></table>';
+      //页面层
+      layer.open({
+          title:"用户反馈",
+          type: 1,
+          skin: 'layui-layer-rim', //加上边框
+          area: ['500px', '600px'], //宽高
+          content: html,
+          shadeClose:true,
+      });
+
+    })
+}
+function view_img(){
+  layer.photos({
+    photos: '.view-img'
+    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+  });
+}
+function add_feedback(id){
+  var reply = $('#reply').val();
+  if(reply){
+    $.post("{:url('add_feedback')}",{id:id,reply:reply}).success(function(data) {
+      layer.msg(data.info, {time: 2000},function(){
+          history.go(0);
+      });
+    });
+  }else{
+    layer.msg('请填写完整信息',0);
+  }
+  
+}
+
+</script>
+</body>
+</html>

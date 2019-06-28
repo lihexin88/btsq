@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>{if condition="isset($info['name'])"}{$info.name} - {/if} {$pagename} -  {:config('WEB_SITE_NAME')}管理后台</title>
+<meta name="description" content=" {:config('WEB_SITE_DESCRIPTION')}" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet" href="__CSS__/bootstrap.css" />
+<link rel="stylesheet" href="__CSS__/font-awesome.css" />
+<link rel="stylesheet" href="__CSS__/ace-fonts.css" />
+<link rel="stylesheet" href="__CSS__/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+<script src="__JS__/ace-extra.js"></script>
+<script id = "aassddd" type="text/javascript">window.jQuery || document.write("<script src='__JS__/jquery.js'>"+"<"+"/script>");</script>
+<script type="text/javascript">if('ontouchstart' in document.documentElement) document.write("<script src='__JS__/jquery.mobile.custom.js'>"+"<"+"/script>");</script>
+<style type="text/css">
+input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"] {
+  line-height: inherit;
+}
+.help-inline{
+  line-height: 32px;
+}
+select{
+	height: 34px;
+}
+.main-container .table tr td {
+	vertical-align: middle;
+}
+.main-container .table tr td a{
+	margin-right:10px;
+}
+#preview{
+  height: 120px;
+  width: auto;
+}
+    #navbar{
+
+    }
+</style>
+    <script>
+       $(document).ready(function () {
+           var new_style = "<style>#navbar{background:";
+           new_style += "{:config("THEME")}";
+           new_style += "} span{ color:"
+           new_style += "{:config("THEME")}"
+           new_style += "}"
+           $("head").append(new_style)
+       })
+    </script>

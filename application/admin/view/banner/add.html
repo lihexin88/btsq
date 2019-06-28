@@ -1,0 +1,188 @@
+{include file="common/top"/}
+<style type="text/css">
+#preview{
+  height: 120px;
+  width: auto;
+}
+</style>
+</head>
+<body class="no-skin">
+{include file="common/header"/}
+<div class="main-container" id="main-container">
+    <!-- #section:basics/sidebar -->
+    {include file="common/sidebar"/}
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- #section:basics/content.breadcrumbs -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a>
+                    </li>
+                    <li><a href="{:url('index')}">APP管理</a></li>
+                    <li class="active">{$pagename}</li>
+                </ul>
+                <!-- /.breadcrumb -->
+            </div>
+            <!-- /section:basics/content.breadcrumbs -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1> {$pagename} </h1>
+            </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <form class="form-horizontal form-post" role="form" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> 中文轮播图 </label>
+                        <div class="col-sm-3 col-lg-3" style="padding-right: 0px;">
+                            <input name="chs_url" type="text" class="form-control" readonly placeholder="这里图标上传地址" value="{$info.chs_url}">
+                            <img name ="chs_url" width="150px" height="150px"  hidden="" id="chs_url" />
+                        </div>
+                        <div class="col-sm-2 col-lg-2" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-success" id="test1" data-type="headimg">图片上传</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> 繁体轮播图 </label>
+                        <div class="col-sm-3 col-lg-3" style="padding-right: 0px;">
+                            <input name="cht_url" type="text" class="form-control" readonly placeholder="这里图标上传地址" value="{$info.cht_url}">
+                            <img name ="cht_url" width="150px" height="150px"  hidden="" id="cht_url" />
+                        </div>
+                        <div class="col-sm-2 col-lg-2" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-success" id="test2" data-type="headimg">图片上传</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> 英语轮播图 </label>
+                        <div class="col-sm-3 col-lg-3" style="padding-right: 0px;">
+                            <input name="en_url" type="text" class="form-control" readonly placeholder="这里图标上传地址" value="{$info.en_url}">
+                            <img name ="en_url" width="150px" height="150px"  hidden="" id="en_url" />
+                        </div>
+                        <div class="col-sm-2 col-lg-2" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-success" id="test3" data-type="headimg">图片上传</a>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="alert alert-danger" style="display:none;"></div>
+                    <div class="clearfix form-actions">
+                      <div class="col-md-offset-3 col-md-9">
+                      <input name="id" class="hidden" type="text" value="{$info.id}">
+                        <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.main-content -->
+    <div class="footer">
+        <div class="footer-inner">
+            <div class="footer-content"><span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a></div>
+<!-- /.main-container -->
+<!-- basic scripts -->
+<include file="common/bottom"/>
+<link rel="stylesheet" href="__LAYUI__/css/layui.css" media="all">
+<script src="__LAYUI__/layui.js"></script>
+<!-- 上传单图片 -->
+<script>
+layui.use('upload', function(){
+  var upload = layui.upload;
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test1' //绑定元素
+    ,url: "{:url('Currency/upload')}" //上传接口
+    ,data: {type: 'banner'}
+    ,done: function(res){
+      // console.log(res)
+      //上传完毕回调
+      if(res.status == 0){
+        layer.msg(res.info, {icon: res.status,time: 1500});
+      }else{
+        // 显示img里边的图片
+        $('#chs_url').show();
+        //返回路径
+        $("input[name=chs_url]").val(res.msg);
+        //给IMG返回路径
+        $("img[name=chs_url]").attr("src",res.msg)
+      }
+    }
+  });
+});
+layui.use('upload', function(){
+  var upload = layui.upload;
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test2' //绑定元素
+    ,url: "{:url('Currency/upload')}" //上传接口
+    ,data: {type: 'banner'}
+    ,done: function(res){
+      // console.log(res)
+      //上传完毕回调
+      if(res.status == 0){
+        layer.msg(res.info, {icon: res.status,time: 1500});
+      }else{
+        // 显示img里边的图片
+        $('#cht_url').show();
+        //返回路径
+        $("input[name=cht_url]").val(res.msg);
+        //给IMG返回路径
+        $("img[name=cht_url]").attr("src",res.msg)
+      }
+    }
+  });
+});
+layui.use('upload', function(){
+  var upload = layui.upload;
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test3' //绑定元素
+    ,url: "{:url('Currency/upload')}" //上传接口
+    ,data: {type: 'banner'}
+    ,done: function(res){
+      // console.log(res)
+      //上传完毕回调
+      if(res.status == 0){
+        layer.msg(res.info, {icon: res.status,time: 1500});
+      }else{
+        // 显示img里边的图片
+        $('#en_url').show();
+        //返回路径
+        $("input[name=en_url]").val(res.msg);
+        //给IMG返回路径
+        $("img[name=en_url]").attr("src",res.msg)
+      }
+    }
+  });
+});
+</script>
+<script type="text/javascript">
+    //设定菜单位置
+    $('a[href="/index.php/Admin/Banner.html"]').parents().filter('li').addClass('active');
+    //提交表单
+    $(".form-post").find('button:submit').click(function () {
+        $.post("{:url('add')}", $(".form-post").serialize()).success(function(data) {
+            $('#btn').text('正在保存').attr('disabled', "true");
+            if (data.status === 0) {
+                $(".form-post .alert").text(data.info).show();
+                setTimeout(function () {
+                        $('#btn').text('保存').removeAttr('disabled');
+                        $(".form-post .alert").empty().hide();
+                    },
+                    1000);
+            } else {
+                setTimeout(function () {
+                        location.href = data.url;
+                    },
+                    1000);
+            }
+        });
+        return false;
+    })
+</script>
+</body>
+</html>

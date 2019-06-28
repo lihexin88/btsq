@@ -1,0 +1,89 @@
+{include file="common/top" /}
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">系统设置</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 添加后台所有的配置项 </small> <a class="btn btn-sm btn-success" style="float:right; margin-right:10px;" href="{:url('add')}" >新增配置</a></h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th class="center">排序</th>
+                      <th>配置名称</th>
+                      <th>配置描述</th>
+                      <th>配置模块</th>
+                      <th>配置类型</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="info.list" id="vo"}
+                      <tr>
+                        <td class="center">{$i}</td>
+                        <td>{$vo.key}</td>
+                        <td>{$vo.info}</td>
+                        <td>{$vo.urlTxt}</td>
+                        <td>{$vo.typeTxt}</td>
+                        <td>
+                        <div class="action-buttons">
+                        <a class="green" href="{:url('edit',array('id'=>$vo['id']))}" title="修改配置"> <i class="ace-icon fa fa-pencil bigger-130"></i> </a> 
+                        </div>
+                        </td>
+                      </tr>
+                    {/volist}
+                  </tbody>
+                </table>
+                <div style="width:100%;margin: 0 auto; text-align:center;">
+                  <ul class="pagination" >
+                    {$info.page}
+                  </ul>
+                </div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+</body>
+</html>
+<script>
+    $('a[href="/index.php/Admin/Config/setting.html"]').parents().filter('li').addClass('open active');
+</script>

@@ -1,0 +1,110 @@
+{include file="common/top" /}
+<style type="text/css">
+.main-container .table tr td {
+  vertical-align: middle;
+}
+.main-container .table tr td a{
+  margin-right:10px;
+}
+</style>
+</head>
+<body class="no-skin" style="font-size: 13px;">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">用户管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1 style="text-align: left;"> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出{$info.count}条数据 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12" style="margin-bottom:10px;">
+                <form action="{:url('relationship')}" method="get" class="form-inline" role="form">
+                  <div class="form-group">
+                    <label>邮箱</label>
+                    <input name="keywords" type="text" class="form-control" placeholder="请输入邮箱">
+                  </div>
+                  <button type="submit" class="btn btn-sm btn-primary">查询</button>
+                </form>
+              </div>
+              <div class="col-xs-12">
+                <div id="chart-container"></div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+    <link rel="stylesheet" href="__CSS__/jquery.orgchart.css">
+    <link rel="stylesheet" href="__CSS__/style1.css">
+    <link rel="stylesheet" href="__CSS__/style.css">
+    <style type="text/css">
+      .orgchart .node {
+        width: 160px;
+      }
+    </style>
+    <script type="text/javascript" src="__JS__/jquery.orgchart.js"></script>
+<script type="text/javascript">
+  {if condition="input('get.keywords')"}
+    $('input[name="keywords"]').val('{$_GET["keywords"]}');
+  {/if}
+  // 定位
+  $('a[href="/index.php/Admin/User/index.html"]').parents().filter('li').addClass('open active');
+
+  $(function() {
+    var id = "{:input('id')}";
+    var keywords = "{:input('keywords')}";
+    $.post("{:url('relationship')}", {id: id,keywords:keywords}).success(function(data) {
+      chart(data);
+    });
+    
+    function chart(data){
+      $('#chart-container').orgchart({
+        'data' : data,
+        'nodeContent': '',
+        'pan': true,
+        'zoom': true,
+        'createNode': function($node, data) {
+          var info="";
+          for(let v of data.info){
+            info += `<div><span>${v.title}</span>：<span>${v.value}</span></div>`;
+          }
+          $node.find(".content").append(info);
+        }
+      });
+    }
+  });
+
+</script>
+</body>
+</html>

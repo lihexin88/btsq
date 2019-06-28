@@ -1,0 +1,132 @@
+{include file="common/top" /}
+</head><body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> 
+  <!-- #section:basics/sidebar --> 
+  {include file="common/sidebar" /} 
+  <!-- /section:basics/sidebar -->
+  <div class="main-content">
+    <div class="main-content-inner"> 
+      <!-- #section:basics/content.breadcrumbs -->
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">矿车管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+        <!-- /.breadcrumb --> 
+      </div>
+      <!-- /section:basics/content.breadcrumbs -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} </h1>
+        </div>
+          <!-- 添加用户 -->
+          <div class="row">
+            <div class="col-xs-12">
+              <form class="form-horizontal form-post" role="form">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right"> 图片地址 </label>
+                    <div class="col-sm-3 col-lg-3" style="padding-right: 0px;">
+                        <input name="url" type="text1" class="form-control" readonly placeholder="这里显示图片上传地址">
+                    </div>
+                    <div class="col-sm-2 col-lg-2" style="padding-left: 0px;">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success" id="test1" data-type="tupian">图片上传</a>
+                    </div>
+                </div>
+               		 <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 标题 </label>
+                  <div class="col-sm-9">
+                    <input name="title" type="text" class="col-xs-10 col-sm-5" placeholder="请填写标题" value="{$info.title}" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 内容 </label>
+                  <div class="col-sm-9">
+                    <input name="content" type="text" class="col-xs-10 col-sm-5" placeholder="请填写内容" value="{$info.content}" />
+                  </div>
+                </div>
+
+          
+
+                 <div class="form-group">
+                  <label class="col-sm-3 control-label no-padding-right"> 开始时间 </label>
+                  <div class="col-sm-9">
+                    <input name="start_time" type="text" class="col-xs-10 col-sm-5" placeholder="请填写开始时间" value="{$info.start_time}" />
+                  </div>
+                 </div>
+
+                 
+                <div class="space-4"></div>
+                <div class="alert alert-danger" style="display:none;"></div>
+                <div class="clearfix form-actions">
+                  <div class="col-md-offset-3 col-md-9">
+                  <input name="id" class="hidden" type="text" value="{$info.id}">
+                    <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<link rel="stylesheet" href="__LAYUI__/css/layui.css" media="all">
+<script src="__LAYUI__/layui.js"></script>
+<script>
+layui.use('upload', function(){
+  var upload = layui.upload;
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test1' //绑定元素
+    ,url: "{:url('Publics/upload')}" //上传接口
+    ,data: {type: 'tupian'}
+    ,done: function(res){
+      //上传完毕回调
+      if(res.status == 0){
+        layer.msg(res.info, {icon: res.status,time: 1500});
+      }else{
+        $("input[name=url]").val(res.msg)
+      }
+      
+    }
+  });
+
+});
+</script>
+<script type="text/javascript">
+$('a[href="/Admin/Mills/index.html"]').parents().filter('li').addClass('open active');
+//提交表单
+$(".form-post").find('button:submit').click(function() {
+  $.post("{:url('add')}", $(".form-post").serialize()).success(function(data) {
+    $('#btn').text('正在保存').attr('disabled', "true");
+    if (data.state === 0) {
+      $(".form-post .alert").text(data.info).show();
+      setTimeout(function() {
+        $('#btn').text('保存').removeAttr('disabled');
+        $(".form-post .alert").empty().hide();
+      },
+      1000);
+    }else{
+      setTimeout(function() {
+        location.href = data.url;
+      },
+      1000);
+    }
+  });
+  return false;
+});
+</script> 
+</body>
+</html>

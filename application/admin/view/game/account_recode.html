@@ -1,0 +1,184 @@
+{include file="common/top" /}
+<style type="text/css">
+    .main-container .table tr td {
+        vertical-align: middle;
+    }
+    .main-container .table tr td a{
+        margin-right:10px;
+    }
+</style>
+<link rel="stylesheet" href = "__STATIC__/ace/css/userauth.css"></link>
+</head>
+<body class="no-skin" style="font-size: 13px;">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+                    <li> <a href="{:url('/admin/game/index')}">有奖竞猜</a> </li>
+                    <li class="active">{$pagename}</li>
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 style="text-align: left;"> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出<small style="color: blue">{$count??0}</small>条数据 </small> </h1>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-bottom:10px;">
+                                <form action="{:url('account_recode')}" method="get" class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <label>用户账户</label>
+                                        <input name="keywords" type="text" class="form-control" placeholder="请输入账户">
+                                    </div>
+                                    <div class="form-group"><label>状态</label>
+                                        <select name="direction" class="form-control">
+                                            <option value="">全部</option>
+                                            <option {$direction==-1?'selected':''} value="-1">提现</option>
+                                            <option {$direction==1?'selected':''} value="1">充值</option>
+                                            <option {$direction==2?'selected':''} value="2">中奖</option>
+                                            <option {$direction==3?'selected':''} value="3">押注</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">查询</button>
+                                    <button type="reset" class="btn btn-sm btn-danger hidden-xs" style="float:right;margin-right:10px;">清空查询条件</button>
+                                </form>
+                            </div>
+                            <div class="col-xs-12">
+                                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>订单号</th>
+                                        <th>用户</th>
+                                        <th>交易类型</th>
+                                        <th>方向</th>
+                                        <th>数额</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {volist name="all_recode" id="vo" key="k"}
+                                        <tr>
+                                            <td>{$k}</td>
+                                            <td>{$vo.id}</td>
+                                            <td>{$vo.account}</td>
+                                            <td class="center">
+                                                {switch name = "$vo.direction"}
+                                                    {case value = "1"}
+                                                        <span class=" purple">充值</span>
+                                                    {/case}
+                                                    {case value = "-1"}
+                                                        <span class="red">提现</span>
+                                                    {/case}
+                                                    {case value = "2"}
+                                                        <span class="badge-yellow">中奖</span>
+                                                    {/case}
+                                                    {case value = "3"}
+                                                        <span>押注</span>
+                                                    {/case}
+                                                {/switch}
+                                            </td>
+                                            <td>
+                                                {if condition = "(($vo.direction eq -1) ||($vo.direction eq 3))"}
+                                                    取出
+                                                {else}
+                                                    存入
+                                                {/if}
+                                            </td>
+                                            <td>
+                                                {if condition = "(($vo.direction eq -1) ||($vo.direction eq 3))"}
+                                                 <span class="red">-</span>
+                                                {else}
+                                                 <span class="green">+</span>
+                                                {/if}
+                                                {$vo.number}
+                                            </td>
+                                            <td>{$vo.create_time}</td>
+                                            <td style="cursor: pointer" onclick="del_this(this,{$vo.id})"><button class="btn-danger">删除</button></td>
+                                        </tr>
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                                <center>{$page}</center>
+                                <div style="width:100%;margin: 0 auto; text-align:center;">
+                                    <ul class="pagination" >
+                                        {$info.page}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-inner">
+            <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+        </div>
+    </div>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+    // 定位
+    $('a[href="/index.php/Admin/game/account_recode.html"]').parents().filter('li').addClass('open active');
+</script>
+<script type="text/javascript">
+    {if condition="input('get.keywords')"}
+    $('input[name="keywords"]').val('{$_GET["keywords"]}');
+    {/if}
+        {if condition="is_numeric(input('get.status'))"}
+        $('select[name="status"]').val({$_GET['status']});
+        {/if}
+</script>
+<script type="text/javascript">
+    jQuery(function($) {
+        //清除查询条件
+        $('#reset').click(function() {
+            location.href = '{:url(\'index\')}';
+        });
+        //更改状态
+        $('.state').change(function() {
+            var state = $(this).val();
+            var id = $(this).attr('data-id');
+            $.post("{:url('edit')}", {id: id,status: state}).success(function(data) {
+                layer.msg(data.info, {icon: data.status,time: 1500},function(){
+                    location.href=self.location.href;
+                });
+            })
+        });
+    });
+</script>
+<script>
+    function del_this(obj,id) {
+        var data = {
+            "id" : id,
+        };
+        layer.confirm("确定删除吗？",function () {
+            $.ajax(
+                {
+                    type:"post",
+                    url:"del_recode",
+                    data:data,
+                    success:function (r) {
+                        r = JSON.parse(r);
+                        if(r['code'] == -1){
+                            layer.msg("删除出错！");
+                        }else{
+                            layer.msg("已删除");
+                            obj.parentNode.remove();
+                        }
+                    }
+                }
+            )
+        })
+    }
+</script>
+</body>
+</html>

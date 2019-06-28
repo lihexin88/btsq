@@ -1,0 +1,96 @@
+{include file="common/top" /}
+</head>
+
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> 
+  <!-- #section:basics/sidebar -->
+  {include file="common/sidebar" /}
+  <!-- /section:basics/sidebar -->
+  <div class="main-content">
+    <div class="main-content-inner"> 
+      <!-- #section:basics/content.breadcrumbs -->
+      <div class="breadcrumbs" id="breadcrumbs"> 
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">系统设置</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+        <!-- /.breadcrumb --> 
+      </div>
+      <!-- /section:basics/content.breadcrumbs -->
+      <div class="page-content"> 
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 设置站点信息 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <form class="form-horizontal form-post" role="form">
+              <!-- #section:elements.form -->
+              {volist name="list" id="vo"}
+              <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> {$vo.info} </label>
+                <div class="col-sm-9">
+                  {switch name="vo.type"}
+                    {case value="0"}<input name="{$vo.key}" type="text" class="col-xs-10 col-sm-5" placeholder="此处填写{$vo.info}" value="{$vo.value}" />{/case}
+                    {case value="1"}
+                      <textarea name="{$vo.key}" class="col-xs-10 col-sm-5" placeholder="这里填写{$vo.info}" >{$vo.value}</textarea>
+                    {/case}
+                    {case value="2"}
+                      <div class="col-sm-9">
+                        <div class="radio" style="float:left">
+                          <label> <input name="{$vo.key}" type="radio" class="ace" value="1" <eq name="vo['value']" value="1">checked</eq> > <span class="lbl"> 开启</span> </label>
+                        </div>
+                        <div class="radio" style="float:left">
+                          <label> <input name="{$vo.key}" type="radio" class="ace" value="0" <eq name="vo['value']" value="0">checked</eq> > <span class="lbl"> 关闭</span> </label>
+                        </div>
+                      </div>
+                    {/case}
+                  {/switch}
+                </div>
+              </div>
+              {/volist}     
+              <div class="space-4"></div>
+              <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-info" type="submit" id="btn"> <i class="ace-icon fa fa-check bigger-110"></i> 保存 </button>
+                </div>
+              </div>              
+            </form>
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"> <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i> </a>
+</div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script type="text/javascript">
+$(".form-post").find('button:submit').click(function() {
+    var btn = $(this);
+    $.post("{:url('index')}", $(".form-post").serialize()).success(function(data) {
+		$('#btn').text('正在保存').attr('disabled',"true");
+    if (data){
+      setTimeout(function() {
+        location.href=self.location.href;
+      },1000);
+    }
+  });
+    return false;
+});
+</script> 
+</body>
+</html>

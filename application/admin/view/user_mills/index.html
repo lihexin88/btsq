@@ -1,0 +1,183 @@
+{include file="common/top" /}
+<style type="text/css">
+.main-container .table tr td {
+  vertical-align: middle;
+}
+.main-container .table tr td a{
+  margin-right:10px;
+}
+</style>
+</head>
+<body class="no-skin">
+{include file="common/header" /}
+<div class="main-container" id="main-container"> {include file="common/sidebar" /}
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li> <i class="ace-icon fa fa-home home-icon"></i> <a href="{:url('Index/index')}">{:config('WEB_SITE_NAME')}</a> </li>
+          <li> <a href="{:url('index')}">用户管理</a> </li>
+          <li class="active">{$pagename}</li>
+        </ul>
+      </div>
+      <div class="page-content">
+        <div class="page-header">
+          <h1> {$pagename} <small> <i class="ace-icon fa fa-angle-double-right"></i> 查询出{$info.count}条数据 </small> </h1>
+        </div>
+        <!-- /.page-header -->
+        <div class="row">
+          <div class="col-xs-12"> 
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+              <div class="col-xs-12" style="margin-bottom:10px;">
+                <form action="{:url('index')}" method="get" class="form-inline" role="form">
+                  <div class="form-group">
+                    <label>邮箱</label>
+                    <input name="email" type="text" class="form-control" placeholder="请输入邮箱">    
+                  </div>
+                  <!--<div class="form-group">-->
+                    <!--<label>状态</label>-->
+                    <!--<select name="status" class="form-control">-->
+                      <!--<option value="">全部</option>-->
+                      <!--<option value="0">关闭</option>-->
+                      <!--<option value="1">开启</option>-->
+                    <!--</select>-->
+                  <!--</div>-->
+                  <div class="form-group">
+                    <label>报废</label>
+                    <select name="mining_status" class="form-control">
+                      <option value="">全部</option>
+                      <option value="0">报废</option>
+                      <option value="1">未报废</option>
+                    </select>
+                  </div>
+				  <div class="form-group">
+                    <label>开启时间</label>
+                    <input name="start_time" type="date" class="form-control" style="width: 135px;">~
+                    <input name="end_time" type="date" class="form-control" style="width: 135px;">
+                  </div>
+                  <button type="submit" class="btn btn-sm btn-primary">查询</button>
+                  <button type="reset" class="btn btn-sm btn-danger hidden-xs" style="float:right;margin-right:10px;">清空查询条件</button>
+                </form>
+              </div>
+              <div class="col-xs-12">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>用户</th>
+                      <th>挖矿投资额</th>
+                      <th>开启时币的数量</th>
+                      <!--<th>状态</th>-->
+                      <th>开启时间</th>
+                      <th>报废</th>
+					  <th>开启等级</th>
+                      <th>剩余收益</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="info.list" id="vo" key="k"}
+                      <tr>
+                        <td>{$k}</td>
+                        <td>{$vo.user_name}</td>
+                        <td>{$vo.amount}</td>
+                        <td>{$vo.spend}</td>
+                        <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.mining_status}</td>
+						<td>{$vo.user_level}</td>
+                        <td>{$vo.reword}</td>
+                        <td class = "btn btn-danger" onclick="delete_mining({$vo.id})">删除</td>
+                      </tr>
+                    {/volist}
+                    <tr>
+                      <td colspan="4" style="text-align:right;">本页业绩:{$info.page_amount}</td>
+                      <td colspan="5" style="text-align:right;">本页已产生收益:{$info.page_total_reword}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" style="text-align:right;">总业绩:{$info.all_amount}</td>
+                      <td colspan="5" style="text-align:right;">总产生收益:{$info.all_total_reword}</td>
+                    </tr>
+                  </tbody>
+
+                </table>
+                <div style="width:100%;margin: 0 auto; text-align:center;">
+                  <ul class="pagination" >
+                    {$info.page}
+                  </ul>
+                </div>
+              </div>
+              <!-- /.span --> 
+            </div>
+            <!-- /.row --> 
+            <!-- PAGE CONTENT ENDS --> 
+          </div>
+          <!-- /.col --> 
+        </div>
+        <!-- /.row --> 
+      </div>
+      <!-- /.page-content --> 
+    </div>
+  </div>
+  <!-- /.main-content -->
+  <div class="footer">
+    <div class="footer-inner"> 
+      <!-- #section:basics/footer -->
+      <div class="footer-content"> <span class="bigger-120"> <span class="blue bolder">{:config('WEB_SITE_NAME')} </span>{$Think.WEB_VERSION}版 </span></div>
+      <!-- /section:basics/footer --> 
+    </div>
+  </div>
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse"><i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i></a> </div>
+<!-- /.main-container --> 
+<!-- basic scripts --> 
+{include file="common/bottom" /}
+<script src="__JS__/layer/layer.js"></script>
+<script type="text/javascript">
+  {if condition="input('get.email')"}
+    $('input[name="email"]').val('{$_GET["email"]}');
+  {/if}
+  {if condition="is_numeric(input('get.status'))"}
+    $('select[name="status"]').val({$_GET['status']});
+  {/if}
+  {if condition="is_numeric(input('get.mining_status'))"}
+    $('select[name="mining_status"]').val({$_GET['mining_status']});
+  {/if}
+        {if condition="input('get.start_time')"}
+    $('input[name="start_time"]').val('{$_GET["start_time"]}');
+  {/if}
+      {if condition="input('get.end_time')"}
+    $('input[name="end_time"]').val('{$_GET["end_time"]}');
+  {/if}
+</script>
+<script type="text/javascript">
+$('a[href="/index.php/Admin/user_mills/index.html"]').parents().filter('li').addClass('open active');
+jQuery(function($) {
+  //清除查询条件
+  $(document).on('click', 'button:reset',function() {
+    location.href = '{:url(\'index\')}';
+  }); 
+});
+
+  //删除用户
+  function delete_mining(id){
+    layer.confirm('确定要删除吗？', {
+        btn: ['确定','关闭'] //按钮
+      }, function(){
+         $.post("{:url('delete_mining')}", {id: id}).success(function(data) {
+             data = JSON.parse(data);
+             if (data.code == 0) {
+            layer.msg(data.msg, {icon: data.code,time: 1500},function(){
+              location.href=self.location.href;
+            });
+          }else{
+            layer.msg(data.msg, {icon: data.status,time: 1500},function(){
+              location.href=self.location.href;
+            });
+          }
+        })
+      }
+    );
+  }
+</script>
+</body>
+</html>
